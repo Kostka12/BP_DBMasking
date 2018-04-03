@@ -45,6 +45,7 @@ namespace TestingConsoleApp
             }
             Console.ReadKey();
         }
+        
         private static string ReadFile(string aPath)
         {
             return File.ReadAllText(aPath);

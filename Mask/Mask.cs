@@ -74,7 +74,21 @@ namespace Mask
             }
             return false;
         }
-
+        public static bool BoolOperator(string aOperator, bool aValue1, bool aValue2)
+        {
+            switch (aOperator)
+            {
+                case "like":
+                    if (aValue1 == aValue2)
+                        return true;
+                    return false;
+                case "=":
+                    if (aValue1 == aValue2)
+                        return true;
+                    return false;
+            }
+            return false;
+        }
         public static int MaskInt(int aValue, string aFirstParameter, string aSecondParameter, string aFunctionName)
         {
             int lMaskedValue = 0;
@@ -109,6 +123,22 @@ namespace Mask
             }
             return lMaskedValue;
         }
+        public static bool MaskBool(bool aValue, string aFunctionName)
+        {
+            bool lMaskedValue = false;
+            switch (aFunctionName)
+            {
+
+                case "Random Value":
+                    {
+                        lMaskedValue = Bool.RandomValue(aValue);
+                    }
+                    break;
+                default:
+                    break;
+            }
+            return lMaskedValue;
+        }
         public static string MaskString(string aValue, string aFirstParameter, string aSecondParameter, string aFunctionName)
         {
             string lMaskedValue = "";
@@ -127,8 +157,8 @@ namespace Mask
                         lMaskedValue = String.ReplaceStringPart(aValue, lFirstParameter, lSecondParameter);
                     }
                     break;
-                case "Create Email":
-                    lMaskedValue = String.ConcatenateEmail("", "", "");
+                //case "Create Email":
+                //    lMaskedValue = String.ConcatenateEmail("", "", "");
                     break;
             }
             return lMaskedValue;
@@ -211,6 +241,8 @@ namespace Mask
                     }
                     break;
                 case "date":
+                case "datetime":
+                case "datetime2":
                     {
                         DateTime lValue = DateTime.Parse(aValue);
                         if (aConditions != null)
@@ -234,6 +266,43 @@ namespace Mask
                         {
                             lMaskedValue = Mask.MaskDate(lValue, aFunctionName).ToString();
                         }       
+                    }
+                    break;
+                case "bit":
+                    {
+                        bool lValue = false;
+                        if (Bool.IsBool(aValue))
+                        {
+                            lValue = Bool.ConvertBool(aValue);
+                        }
+                        else break;
+                        if (aConditions != null)
+                        {
+                            foreach (var nCondition in aConditions)
+                            {
+                                bool lConditionValue = false;
+                                if (Bool.IsBool(nCondition.Value))
+                                {
+                                    lConditionValue = Bool.ConvertBool(nCondition.Value);
+                                }
+                                else break;
+                                if (!Mask.BoolOperator(nCondition.Operator, lValue, lConditionValue))
+                                {
+                                    lShouldMask = true;
+                                    continue;
+                                }
+                                else
+                                {
+                                    lShouldMask = false;
+                                    break;
+                                }
+                            }
+                            lMaskedValue = lShouldMask ? Mask.MaskBool(lValue, aFunctionName).ToString() : lValue.ToString();
+                        }
+                        else
+                        {
+                            lMaskedValue = Mask.MaskBool(lValue, aFunctionName).ToString();
+                        }
                     }
                     break;
 

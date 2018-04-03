@@ -254,13 +254,13 @@ namespace Desktop
                // MaskList.Add("Replace String Part");
                 MaskList.Add("Create email");
             }
-            else if (lType.Equals("date"))
+            else if (lType.Equals("date") || lType.Equals("datetime") || lType.Equals("datetime2"))
             {
                 MaskList.Add("Hash date");
             }
             else if (lType.Equals("bit"))
             {
-                
+                MaskList.Add("Random Value");
             }
 
         }

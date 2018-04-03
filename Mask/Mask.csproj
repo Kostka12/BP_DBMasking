@@ -48,6 +48,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Bool.cs" />
     <Compile Include="Date.cs" />
     <Compile Include="Integer.cs" />
     <Compile Include="Mask.cs" />

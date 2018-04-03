@@ -247,7 +247,6 @@ namespace QueryParserImplementation
             string lColumnType = Database.Tables.FirstOrDefault(aR => aR.Name.ToLower() == aTableName.ToLower())
                 .Columns.FirstOrDefault(aR => aR.Name.ToLower() == aCondition.ColumnName.ToLower()).Type;
             List<Condition> lConditions = new List<Condition>();
-            //toto nene kdyz bude sum nebo avg tak to asi odstranit uplne; jinak nonsense podminka
             if (aCondition.Aggregate == FunctionEnum.NONE || aCondition.Aggregate == FunctionEnum.SUM || aCondition.Aggregate == FunctionEnum.AVG)
             {
                 if (IsCorrectType(lColumnType, aCondition.Value))
@@ -281,7 +280,11 @@ namespace QueryParserImplementation
                         int lIntValue = 0;
                         return Int32.TryParse(aValue, out lIntValue);
                     }
-
+                case "bit":
+                    {
+                        bool lBoolValue = false;
+                        return Boolean.TryParse(aValue, out lBoolValue);
+                    }
                 case "varchar":
                 case "nvarchar":
                 case "varchar2":
@@ -290,6 +293,8 @@ namespace QueryParserImplementation
                         return true;
                     }
                 case "date":
+                case "datetime":
+                case "datetime2":
                     {
                         DateTime lIntValue = new DateTime();
                         return DateTime.TryParse(aValue, out lIntValue);
