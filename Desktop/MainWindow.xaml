@@ -1,0 +1,100 @@
+﻿<Window x:Class="Desktop.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:Desktop"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="533.75" Width="960" WindowState="Maximized">
+    <Window.Resources>
+        <FontFamily x:Key="FontFamily">Calibri</FontFamily>
+        <Color x:Key="FontColor">Red</Color>
+        <system:Double x:Key="FontSize">18</system:Double>
+    </Window.Resources>
+    <Grid Margin="0,0,2,0">
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="_File">
+                    <MenuItem Header="_Connect" Click="Connect"/>
+                    <MenuItem Header="_Disconnect" Click="Disconnect"/>
+                    <MenuItem Header="_Load" Click="LoadDbSchema"/>
+                </MenuItem>
+            </Menu>
+
+        </DockPanel>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="Auto"></RowDefinition>
+                <RowDefinition Height="*"></RowDefinition>
+            </Grid.RowDefinitions>
+            <Grid Grid.Row="0">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="170px"></ColumnDefinition>
+                    <ColumnDefinition Width="300px"></ColumnDefinition>
+                    <ColumnDefinition Width="*"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <DataGrid Grid.Column="0" x:Name="TablesGrid" ColumnWidth="*" HorizontalAlignment="Left" RowHeaderWidth="0"
+                  Margin="5,56,0,0" VerticalAlignment="Top"  ItemsSource="{Binding Tables, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Height="296" Width="141" CanUserAddRows="false" AutoGenerateColumns="False" IsSynchronizedWithCurrentItem="True" SelectionChanged="TablesGrid_SelectionChanged" IsReadOnly="True" SelectedItem="0">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding ., Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Name"/>
+                    </DataGrid.Columns>
+
+                </DataGrid>
+                <DataGrid Grid.Column="1" x:Name="ColumnsGrid" ColumnWidth="*" HorizontalAlignment="Left" RowHeaderWidth="0"
+                  Margin="10,56,0,0" VerticalAlignment="Top"  ItemsSource="{Binding Columns, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                  Height="296" Width="250" CanUserAddRows="false" AutoGenerateColumns="False" IsSynchronizedWithCurrentItem="True" SelectionChanged="ColumnsGrid_OnSelectionChanged" IsReadOnly="True" SelectedItem="0" RenderTransformOrigin="0.503,0.519">
+                    <DataGrid.Columns>
+                        <DataGridTextColumn Binding="{Binding .Name, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Name"/>
+                        <DataGridTextColumn Binding="{Binding .Constraint, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Header="Constraint"/>
+                    </DataGrid.Columns>
+                </DataGrid>
+                <Grid Grid.Column="2">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                        <RowDefinition Height="Auto"></RowDefinition>
+                    </Grid.RowDefinitions>
+                    <ComboBox Grid.Row="0" x:Name="MasksComboBox" HorizontalAlignment="Left" ItemsSource="{Binding MaskList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,89,0,0" VerticalAlignment="Top" Width="220" SelectionChanged="MasksComboBox_OnSelectionChanged"/>
+                    <Grid Grid.Row="1">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50px"></ColumnDefinition>
+                            <ColumnDefinition Width="150px"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="FirstParamLabel" Content="First" />
+                        <TextBox Grid.Column="1" x:Name="FirstParameter" HorizontalAlignment="Left" Height="38" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="31,1,0,0"/>
+                    </Grid>
+                    <Grid Grid.Row="2">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="50px"></ColumnDefinition>
+                            <ColumnDefinition Width="150px"></ColumnDefinition>
+                        </Grid.ColumnDefinitions>
+                        <Label Grid.Column="0" x:Name="SecParamLabel" Content="Second"/>
+                        <TextBox Grid.Column="1" x:Name="SecondParameter" HorizontalAlignment="Left" Height="33" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="31,1,0,0"/>
+                    </Grid>
+                    <Button Grid.Row="4" x:Name="MaskButton" Content="Mask" HorizontalAlignment="Left" VerticalAlignment="Top" Width="179" Click="MaskButton_OnClick" Margin="80,34,0,-62"/>
+                </Grid>
+
+            </Grid>
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                    <ColumnDefinition Width="Auto"></ColumnDefinition>
+                </Grid.ColumnDefinitions>
+                <Button Grid.Column="0" x:Name="LoadWorkload" Content="Load Workload" HorizontalAlignment="Left" Margin="27,383,0,0" VerticalAlignment="Top" Width="180" Click="LoadWorkload_OnClick"/>
+                <Button  Grid.Column="1" x:Name="EditWorkload" Content="Edit Workload" HorizontalAlignment="Left" Margin="52,383,0,0" VerticalAlignment="Top" Width="179" Click="EditWorkload_Click"/>
+            </Grid>
+            <Label Grid.Row="2" x:Name="InfoLabel" FontSize="{StaticResource FontSize}" FontFamily="{StaticResource FontFamily}" Foreground="Red"/>
+            <TabControl x:Name="MaskedTableViewsTabControl" Grid.Row="3"/>
+        </Grid>
+
+
+
+    </Grid>
+
+</Window>
