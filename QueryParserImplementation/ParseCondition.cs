@@ -17,7 +17,7 @@ namespace QueryParserImplementation
             {
                 if (aCondition.Contains(nOperator))
                 {
-                    lCondition.Operator = CleanOperator(nOperator); 
+                    lCondition.Operator = CleanOperator(nOperator);
                     string[] lConditionParts = aCondition.Split(new string[] { nOperator }, StringSplitOptions.RemoveEmptyEntries);
                     lCondition.Aggregate = NotifyAggregateFunction(lConditionParts[0]);
                     lCondition.ColumnName = CleanColumnName(lConditionParts[0].Trim());
@@ -38,13 +38,13 @@ namespace QueryParserImplementation
         }
         public static string CleanColumnName(string aColName)
         {
-            string[] lKeywords = { "count(" ,"sum(","avg(","min(","max("};
+            string[] lKeywords = { "count(", "sum(", "avg(", "min(", "max(" };
             string lNewColName = aColName;
             foreach (string nKeyword in lKeywords)
             {
                 if (aColName.Contains(nKeyword))
                 {
-                    lNewColName = (aColName.Replace(nKeyword, String.Empty)).Trim(new char[] { ')' }); 
+                    lNewColName = (aColName.Replace(nKeyword, String.Empty)).Trim(new char[] { ')' });
                 }
             }
 
@@ -88,7 +88,7 @@ namespace QueryParserImplementation
             return FunctionEnum.NONE;
         }
 
-        public static List<string> OperatorConvertion(string[] aData,string aOperator, FunctionEnum aFunction, string aValue)
+        public static List<string> OperatorConvertion(string[] aData, string aOperator, FunctionEnum aFunction, string aValue)
         {
             int lIntVal = 0;
             int lSelectedData;
@@ -97,50 +97,82 @@ namespace QueryParserImplementation
                 return lConditionValues;
             if ((aFunction == FunctionEnum.MAX || aFunction == FunctionEnum.MIN) && !Int32.TryParse(aData[0], out lSelectedData))
                 return lConditionValues;
-                switch (aOperator)
-                {
-                    case "<":
+            switch (aOperator)
+            {
+                case "<":
                     if (aFunction == FunctionEnum.COUNT)
                     {
                         lConditionValues = aData.GroupBy(aR => aR).Where(aR => aR.Count() < lIntVal).Select(aR => aR.First()).ToList();
                     }
+                    else if (aFunction == FunctionEnum.MIN)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Min()) < lIntVal).Select(aR => aR.First()).ToList();
+                    }
+                    else if (aFunction == FunctionEnum.MAX)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Max()) < lIntVal).Select(aR => aR.First()).ToList();
+                    }
                     break;
-                    case ">":
-                        if (aFunction == FunctionEnum.COUNT)
-                        {
-                            lConditionValues = aData.GroupBy(aR => aR).Where(aR => aR.Count() > lIntVal).Select(aR => aR.First()).ToList();
-                        }
-                        //else if (aFunction == FunctionEnum.MIN)
-                        //{
-                        //    lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Min()) > lIntVal).ToArray();
-                        //}
-                        //else if (aFunction == FunctionEnum.MAX)
-                        //{
-                        //    lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Min()) > lIntVal).ToArray();
-                        //}
-                        break;
-                    case "=":
+                case ">":
+                    if (aFunction == FunctionEnum.COUNT)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => aR.Count() > lIntVal).Select(aR => aR.First()).ToList();
+                    }
+                    else if (aFunction == FunctionEnum.MIN)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Min()) > lIntVal).Select(aR => aR.First()).ToList();
+                    }
+                    else if (aFunction == FunctionEnum.MAX)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Max()) > lIntVal).Select(aR => aR.First()).ToList();
+                    }
+                    break;
+                case "=":
                     if (aFunction == FunctionEnum.COUNT)
                     {
                         lConditionValues = aData.GroupBy(aR => aR).Where(aR => aR.Count() == lIntVal).Select(aR => aR.First()).ToList();
                     }
+                    else if (aFunction == FunctionEnum.MIN)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Min()) == lIntVal).Select(aR => aR.First()).ToList();
+                    }
+                    else if (aFunction == FunctionEnum.MAX)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Max()) == lIntVal).Select(aR => aR.First()).ToList();
+                    }
                     break;
-                    case "<=":
+                case "<=":
                     if (aFunction == FunctionEnum.COUNT)
                     {
                         lConditionValues = aData.GroupBy(aR => aR).Where(aR => aR.Count() <= lIntVal).Select(aR => aR.First()).ToList();
                     }
+                    else if (aFunction == FunctionEnum.MIN)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Min()) <= lIntVal).Select(aR => aR.First()).ToList();
+                    }
+                    else if (aFunction == FunctionEnum.MAX)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Max()) <= lIntVal).Select(aR => aR.First()).ToList();
+                    }
                     break;
-                    case ">=":
+                case ">=":
                     if (aFunction == FunctionEnum.COUNT)
                     {
                         lConditionValues = aData.GroupBy(aR => aR).Where(aR => aR.Count() >= lIntVal).Select(aR => aR.First()).ToList();
                     }
+                    else if (aFunction == FunctionEnum.MIN)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Min()) >= lIntVal).Select(aR => aR.First()).ToList();
+                    }
+                    else if (aFunction == FunctionEnum.MAX)
+                    {
+                        lConditionValues = aData.GroupBy(aR => aR).Where(aR => Int32.Parse(aR.Max()) >= lIntVal).Select(aR => aR.First()).ToList();
+                    }
                     break;
-                    
-                }
+
+            }
             return lConditionValues;
-       
+
         }
     }
 }

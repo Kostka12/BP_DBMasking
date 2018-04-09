@@ -27,18 +27,35 @@ namespace Desktop
 
         private void ConnectBut_OnClick(object sender, RoutedEventArgs e)
         {
-            _cDvm.Server = ServerTextBox.Text;
-            _cDvm.Database = DbTextBox.Text;
-            _cDvm.User = UserTextBox.Text;
-            _cDvm.Password = PasswordBox.Password;
-            if (_cDvm.SaveConnection())
+            if(TabControl.SelectedIndex == 0)
             {
-                ConLabel.Content = "Connected";
+                _cDvm.Server = ServerTextBox.Text;
+                _cDvm.Database = DbTextBox.Text;
+                _cDvm.User = UserTextBox.Text;
+                _cDvm.Password = PasswordBox.Password;
+                if (_cDvm.SaveConnection(false))
+                {
+                    ConLabel.Content = "Connected";
+                }
+                else
+                {
+                    ConLabel.Content = "Connection cannot be established!";
+                }
             }
-            else
+            if(TabControl.SelectedIndex == 1)
             {
-                ConLabel.Content = "Connection cannot be established!";
+                _cDvm.Server = ServerTextBox2.Text;
+                _cDvm.Database = DbTextBox2.Text;
+                if (_cDvm.SaveConnection(true))
+                {
+                    ConLabel.Content = "Connected";
+                }
+                else
+                {
+                    ConLabel.Content = "Connection cannot be established!";
+                }
             }
+            
         }
     }
 }

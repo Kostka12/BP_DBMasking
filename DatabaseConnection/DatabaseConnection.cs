@@ -17,17 +17,24 @@ namespace DatabaseConnection
         private SqlTransaction SqlTransaction { get; set; }
         public string Language { get; set; }
         public StringBuilder Message { get; set; }
-        private string path = @"C:\DbMasking\dbconnect\connection_string.xml";
+        private string path = @"C:\DbMasking\dbconnect\connection_string.txt";
         private string ConnectionString { get; set; }
 
         public DatabaseConnection()
         {
-            Load();
-            Connection = new SqlConnection();
-            Language = "en";
-            Message = new StringBuilder();
-            Connection.InfoMessage += myConnection_InfoMessage;
-            //ConnectionString = "server=DESKTOP-I8MFAAT;database=UDBS;user=udbs_user1;password=okulele;";
+            try
+            {
+                Load();
+                Connection = new SqlConnection();
+                Language = "en";
+                Message = new StringBuilder();
+                Connection.InfoMessage += myConnection_InfoMessage;
+            }
+            catch(Exception ex)
+            {
+                throw ex;
+            }
+            //ConnectionString = "";
 
            
         }
@@ -40,34 +47,34 @@ namespace DatabaseConnection
 
         public void Load()
         {
-            string text = "";
-            try
-            {
-                using (StringReader sr = new StringReader(path))
-                {
-                    text = sr.ReadToEnd();
-                }
-            }
-            catch (Exception e)
-            {
-                Trace.TraceInformation("Soubor nebyl nalezen");
-            }
-            XmlDocument xDoc = new XmlDocument();
-            try
-            {
-                xDoc.Load(text);
-                XmlNode dbNode = xDoc.SelectSingleNode("//DbName");
-                XmlNode serverNode = xDoc.SelectSingleNode("//ServerName");
-                XmlNode userNode = xDoc.SelectSingleNode("//UserName");
-                XmlNode passNode = xDoc.SelectSingleNode("//UserPassword");
-                if (serverNode != null && dbNode != null && userNode != null && passNode != null)
-                    ConnectionString = "server=" + serverNode.InnerText + ";database=" + dbNode.InnerText + ";user=" +
-                                       userNode.InnerText + ";password=" + passNode.InnerText + ";";
-            }
-            catch (Exception e)
-            {
-                Trace.TraceInformation("Soubor nebyl nalezen");
-            }
+            //string text = "";
+            //try
+            //{
+            //    using (StringReader sr = new StringReader(path))
+            //    {
+            //        text = sr.ReadToEnd();
+            //    }
+            //}
+            //catch (Exception e)
+            //{
+            //    Trace.TraceInformation("Soubor nebyl nalezen");
+            //}
+            ////XmlDocument xDoc = new XmlDocument();
+         
+                ConnectionString = File.ReadAllText(path);
+                //xDoc.Load(text);
+                //XmlNode dbNode = xDoc.SelectSingleNode("//DbName");
+                //XmlNode serverNode = xDoc.SelectSingleNode("//ServerName");
+                //XmlNode userNode = xDoc.SelectSingleNode("//UserName");
+                //XmlNode passNode = xDoc.SelectSingleNode("//UserPassword");
+                //if (serverNode != null && dbNode != null && userNode != null && passNode != null)
+                //    ConnectionString = "server=" + serverNode.InnerText + ";database=" + dbNode.InnerText + ";user=" +
+                //                       userNode.InnerText + ";password=" + passNode.InnerText + ";";
+            //}
+            //catch (Exception e)
+            //{
+            //    Trace.TraceInformation("Soubor nebyl nalezen");
+            //}
             
           //  Console.WriteLine(dbNode.InnerText + "dsda " + serverNode.InnerText+ " "+ userNode.InnerText + " "+ passNode.InnerText);
         }

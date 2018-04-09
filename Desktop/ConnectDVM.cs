@@ -94,40 +94,69 @@ namespace Desktop
         }
 
     
-        public bool SaveConnection()
+        public bool SaveConnection(bool aIntegratedSecurity)
         {
-            XmlDocument xDoc = new XmlDocument();
-           
-            string connectionString = "server=" + Server + ";database=" + Database + ";user=" +
-                                       User + ";password=" + Password + ";";
-            string result = "";
-            if(TestConnect(connectionString))
+            XmlDocument lXDoc = new XmlDocument();
+            try
             {
-                result = "Connected";
-                XmlNode declaration = xDoc.CreateXmlDeclaration("1.0", "UTF-8", null);
-                xDoc.AppendChild(declaration);
-                XmlNode root = xDoc.CreateElement("connString");
-                xDoc.AppendChild(root);
-                XmlNode sBranch = xDoc.CreateElement("ServerName");
-                root.AppendChild(sBranch);
-                sBranch.InnerText = Server;
-                XmlNode dbBranch = xDoc.CreateElement("DbName");
-                root.AppendChild(dbBranch);
-                dbBranch.InnerText = Database;
-                XmlNode uBranch = xDoc.CreateElement("UserName");
-                root.AppendChild(uBranch);
-                uBranch.InnerText = User;
-                XmlNode pBranch = xDoc.CreateElement("UserPassword");
-                root.AppendChild(pBranch);
-                pBranch.InnerText = Password;
-                xDoc.Save(@"C:\DbMasking\dbconnect\connection_string.xml");
-                return true;
+                if (aIntegratedSecurity)
+                {
+                    string lConnectionString = "Data Source=" + Database + ";Initial Catalog=" +  Server + ";Integrated Security=True";
+
+                    if (TestConnect(lConnectionString))
+                    {
+                        System.IO.Directory.CreateDirectory(@"C:\DbMasking\dbconnect");
+                        System.IO.File.WriteAllText(@"C:\DbMasking\dbconnect\connection_string.txt", lConnectionString);
+                        return true;
+                    }
+                    else
+                    {
+                        return false;
+                    }
+
+                }
+                else
+                {
+                    string lConnectionString = "server=" + Server + ";database=" + Database + ";user=" +
+                                           User + ";password=" + Password + ";";
+
+                    if (TestConnect(lConnectionString))
+                    {
+                        //XmlNode declaration = lXDoc.CreateXmlDeclaration("1.0", "UTF-8", null);
+                        //lXDoc.AppendChild(declaration);
+                        //XmlNode root = lXDoc.CreateElement("connString");
+                        //lXDoc.AppendChild(root);
+                        //XmlNode sBranch = lXDoc.CreateElement("ServerName");
+                        //root.AppendChild(sBranch);
+                        //sBranch.InnerText = Server;
+                        //XmlNode dbBranch = lXDoc.CreateElement("DbName");
+                        //root.AppendChild(dbBranch);
+                        //dbBranch.InnerText = Database;
+                        //XmlNode uBranch = lXDoc.CreateElement("UserName");
+                        //root.AppendChild(uBranch);
+                        //uBranch.InnerText = User;
+                        //XmlNode pBranch = lXDoc.CreateElement("UserPassword");
+                        //root.AppendChild(pBranch);
+                        //pBranch.InnerText = Password;
+                        System.IO.Directory.CreateDirectory(@"C:\DbMasking\dbconnect");
+                        System.IO.File.WriteAllText(@"C:\DbMasking\dbconnect\connection_string.txt", lConnectionString);
+                        //lXDoc.Save();
+                        return true;
+                    }
+                    else
+                    {
+
+                        return false;
+                    }
+                }
+
+
             }
-            else
+            catch
             {
-                result = "Connection cannot be established";
                 return false;
-            }         
+            }
+            
         }
     }
 }

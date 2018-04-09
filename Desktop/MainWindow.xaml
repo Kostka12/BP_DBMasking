@@ -60,7 +60,7 @@
                         <RowDefinition Height="Auto"></RowDefinition>
                         <RowDefinition Height="Auto"></RowDefinition>
                     </Grid.RowDefinitions>
-                    <ComboBox Grid.Row="0" x:Name="MasksComboBox" HorizontalAlignment="Left" ItemsSource="{Binding MaskList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,89,0,0" VerticalAlignment="Top" Width="220" SelectionChanged="MasksComboBox_OnSelectionChanged"/>
+                    <ComboBox Grid.Row="0" x:Name="MasksComboBox" HorizontalAlignment="Left" ItemsSource="{Binding MaskList, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Margin="80,89,0,0" VerticalAlignment="Top" Width="220" SelectionChanged="MasksComboBox_OnSelectionChanged" Text="Select Mask Technique"/>
                     <Grid Grid.Row="1">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50px"></ColumnDefinition>
@@ -68,6 +68,7 @@
                         </Grid.ColumnDefinitions>
                         <Label Grid.Column="0" x:Name="FirstParamLabel" Content="First" />
                         <TextBox Grid.Column="1" x:Name="FirstParameter" HorizontalAlignment="Left" Height="38" TextWrapping="Wrap" VerticalAlignment="Top" Width="120" Margin="31,1,0,0"/>
+                        <Button  Grid.Column="1" x:Name="LoadSubValues" Content="Load File" HorizontalAlignment="Left" VerticalAlignment="Top" Width="179" Click="LoadSubValues_OnClick" Margin="31,8,-59,0"/>
                     </Grid>
                     <Grid Grid.Row="2">
                         <Grid.ColumnDefinitions>

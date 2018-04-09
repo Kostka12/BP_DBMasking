@@ -50,6 +50,8 @@
   <ItemGroup>
     <Compile Include="Bool.cs" />
     <Compile Include="Date.cs" />
+    <Compile Include="Double.cs" />
+    <Compile Include="Float.cs" />
     <Compile Include="Integer.cs" />
     <Compile Include="Mask.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

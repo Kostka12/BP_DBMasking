@@ -9,6 +9,8 @@ namespace Mask
 {
     public static class Mask
     {
+        public static List<string> SubstitutionValues;
+
         public static bool StrOperator(string aOperator, string aValue1, string aValue2)
         {
             aOperator = aOperator.ToLower();
@@ -48,6 +50,60 @@ namespace Mask
             return false;
         }
         public static bool Operator(string aOperator, int aValue1, int aValue2)
+        {
+            switch (aOperator)
+            {
+                case ">":
+                    if (aValue1 > aValue2)
+                        return true;
+                    return false;
+                case "<":
+                    if (aValue1 < aValue2)
+                        return true;
+                    return false;
+                case "=":
+                    if (aValue1 == aValue2)
+                        return true;
+                    return false;
+                case "<=":
+                    if (aValue1 <= aValue2)
+                        return true;
+                    return false;
+                case ">=":
+                    if (aValue1 >= aValue2)
+                        return true;
+                    return false;
+            }
+            return false;
+        }
+        public static bool Operator(string aOperator, float aValue1, float aValue2)
+        {
+            switch (aOperator)
+            {
+                case ">":
+                    if (aValue1 > aValue2)
+                        return true;
+                    return false;
+                case "<":
+                    if (aValue1 < aValue2)
+                        return true;
+                    return false;
+                case "=":
+                    if (aValue1 == aValue2)
+                        return true;
+                    return false;
+                case "<=":
+                    if (aValue1 <= aValue2)
+                        return true;
+                    return false;
+                case ">=":
+                    if (aValue1 >= aValue2)
+                        return true;
+                    return false;
+            }
+            return false;
+        }
+        public static bool Operator(string aOperator, double aValue1, double aValue2)
         {
             switch (aOperator)
             {
@@ -123,6 +179,28 @@ namespace Mask
             }
             return lMaskedValue;
         }
+        public static float MaskFloat(float aValue, string aFirstParameter, string aSecondParameter, string aFunctionName)
+        {
+            float lMaskedValue = 0;
+            switch (aFunctionName)
+            {
+                case "Hash":
+                        lMaskedValue = Float.Hash(aValue);
+                    break;
+            }
+            return lMaskedValue;
+        }
+        public static double MaskDouble(double aValue, string aFirstParameter, string aSecondParameter, string aFunctionName)
+        {
+            double lMaskedValue = 0;
+            switch (aFunctionName)
+            {
+                case "Hash":
+                    lMaskedValue = Double.Hash(aValue);
+                    break;
+            }
+            return lMaskedValue;
+        }
         public static bool MaskBool(bool aValue, string aFunctionName)
         {
             bool lMaskedValue = false;
@@ -142,21 +220,27 @@ namespace Mask
         public static string MaskString(string aValue, string aFirstParameter, string aSecondParameter, string aFunctionName)
         {
             string lMaskedValue = "";
-            int lFirstParameter = Int32.Parse(aFirstParameter);
+            
             switch (aFunctionName)
             {
                 case "Random String Part":
                     {
+                        int lFirstParameter = Int32.Parse(aFirstParameter);
                         int lSecondParameter = Int32.Parse(aSecondParameter);
                         lMaskedValue = String.RandStringPart(aValue, lFirstParameter, lSecondParameter);
                     }
                     break;
                 case "Replace String Part":
                     {
+                        int lFirstParameter = Int32.Parse(aFirstParameter);
                         char lSecondParameter = Convert.ToChar(aSecondParameter);
                         lMaskedValue = String.ReplaceStringPart(aValue, lFirstParameter, lSecondParameter);
                     }
                     break;
+                case "Substitution":
+                    {
+                        lMaskedValue = String.Substitution(aValue);
+                    }
                 //case "Create Email":
                 //    lMaskedValue = String.ConcatenateEmail("", "", "");
                     break;
@@ -210,6 +294,60 @@ namespace Mask
 
                     }
 
+                    break;
+                case "float":
+                    {
+                        var lValue = float.Parse(aValue);
+
+                        if (aConditions != null)
+                        {
+                            foreach (var nCondition in aConditions)
+                            {
+                                if (!Mask.Operator(nCondition.Operator, lValue, float.Parse(nCondition.Value)))
+                                {
+                                    lShouldMask = true;
+                                    continue;
+                                }
+                                else
+                                {
+                                    lShouldMask = false;
+                                    break;
+                                }
+                            }
+                            lMaskedValue = lShouldMask ? Mask.MaskFloat(lValue, aFirstParameter, aSecondParameter, aFunctionName).ToString() : lValue.ToString();
+                        }
+                        else
+                        {
+                            lMaskedValue = Mask.MaskFloat(lValue, aFirstParameter, aSecondParameter, aFunctionName).ToString();
+                        }
+                    }
+                    break;
+                case "double":
+                    {
+                        var lValue = System.Double.Parse(aValue);
+
+                        if (aConditions != null)
+                        {
+                            foreach (var nCondition in aConditions)
+                            {
+                                if (!Mask.Operator(nCondition.Operator, lValue, float.Parse(nCondition.Value)))
+                                {
+                                    lShouldMask = true;
+                                    continue;
+                                }
+                                else
+                                {
+                                    lShouldMask = false;
+                                    break;
+                                }
+                            }
+                            lMaskedValue = lShouldMask ? Mask.MaskDouble(lValue, aFirstParameter, aSecondParameter, aFunctionName).ToString() : lValue.ToString();
+                        }
+                        else
+                        {
+                            lMaskedValue = Mask.MaskDouble(lValue, aFirstParameter, aSecondParameter, aFunctionName).ToString();
+                        }
+                    }
                     break;
                 case "varchar":
                 case "nvarchar":
@@ -308,6 +446,33 @@ namespace Mask
 
             }
             return lMaskedValue;
+        }
+        public static bool EnoughSubValues(int aSingleValues,string aFunctionName)
+        {
+            if(aFunctionName == "Substitution")
+            {
+                if(aSingleValues <= SubstitutionValues.Count)     
+                    return true;                
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+        public static bool SubValuesLoaded(string aFunctionName)
+        {
+            if(aFunctionName == "Substitution")
+            {
+                if (SubstitutionValues != null)
+                {
+                    if (SubstitutionValues.Count >= 0)
+                        return true;
+                    else return false;
+                }
+                else return false;
+            }
+            return true;
         }
     }
 }

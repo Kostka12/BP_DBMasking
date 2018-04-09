@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:Desktop"
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         mc:Ignorable="d"
-        Title="ConnectionWin" Height="350" Width="300">
+        Title="ConnectionWin" Height="429.9" Width="300">
 
     <Window.Resources>
         <FontFamily x:Key="FontFamily">Calibri</FontFamily>
@@ -21,16 +21,36 @@
     </Window.Triggers>
 
     <Grid Margin="10,0,-1,-6" RenderTransformOrigin="0.5,0.5">
+        <TabControl Name ="TabControl" Margin="0,15,10,138">
+            <TabItem Header="Standard connection">
+                <Grid>
+                    <TextBox x:Name="ServerTextBox" HorizontalAlignment="Left" Height="23" Margin="106,66,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="DbTextBox" HorizontalAlignment="Left" Height="23" Margin="106,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="UserTextBox" HorizontalAlignment="Left" Height="23" Margin="106,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label x:Name="ServerLabel" Content="Server:" HorizontalAlignment="Left" Margin="35,63,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="DbLabel" Content="Database:" HorizontalAlignment="Left" Margin="35,91,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.02"/>
+                    <Label x:Name="UserLabel" Content="User:" HorizontalAlignment="Left" Margin="35,119,0,0" VerticalAlignment="Top"/>
+                    <Label x:Name="PassLabel" Content="Password:" HorizontalAlignment="Left" Margin="35,145,0,0" VerticalAlignment="Top"/>
+                    <PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" Margin="106,150,0,0" VerticalAlignment="Top" Width="120"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Trusted connection">
+                <Grid Margin="0,0,0,0">
+                    <TextBox x:Name="ServerTextBox2" HorizontalAlignment="Left" Height="23" Margin="115,84,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
+                    <TextBox x:Name="DbTextBox2" HorizontalAlignment="Left" Height="23" Margin="115,56,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
+                    <Label x:Name="ServerLabel2" Content="Server:" HorizontalAlignment="Left" Margin="42,55,0,0" VerticalAlignment="Top" Width="52"/>
+                    <Label x:Name="DbLabel2" Content="Database:" HorizontalAlignment="Left" Margin="42,84,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.02" Width="63"/>
+                    
 
-        <TextBox x:Name="ServerTextBox" HorizontalAlignment="Left" Height="23" Margin="106,66,0,0" TextWrapping="Wrap"  VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="DbTextBox" HorizontalAlignment="Left" Height="23" Margin="106,94,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <TextBox x:Name="UserTextBox" HorizontalAlignment="Left" Height="23" Margin="106,122,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="120"/>
-        <Label x:Name="ServerLabel" Content="Server:" HorizontalAlignment="Left" Margin="35,63,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="DbLabel" Content="Database:" HorizontalAlignment="Left" Margin="35,91,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.494,0.02"/>
-        <Label x:Name="UserLabel" Content="User:" HorizontalAlignment="Left" Margin="35,119,0,0" VerticalAlignment="Top"/>
-        <Label x:Name="PassLabel" Content="Password:" HorizontalAlignment="Left" Margin="35,145,0,0" VerticalAlignment="Top"/>
-        <PasswordBox x:Name="PasswordBox" HorizontalAlignment="Left" Margin="106,150,0,0" VerticalAlignment="Top" Width="120"/>
-        <Button x:Name="ConnectBut" Content="Connect" HorizontalAlignment="Left" Margin="22,196,0,0" VerticalAlignment="Top" Width="91" Click="ConnectBut_OnClick"/>
-        <Label x:Name="ConLabel" Content="" Margin="10,233,10,10" FontSize="{StaticResource FontSize}" FontFamily="{StaticResource FontFamily}" Foreground="Red"/>
+                </Grid>
+            </TabItem>
+
+
+        </TabControl>
+
+        <Button x:Name="ConnectBut" Content="Connect" HorizontalAlignment="Left" Margin="20,267,0,0" VerticalAlignment="Top" Width="91" Click="ConnectBut_OnClick"/>
+        <Label x:Name="ConLabel" Content="" Margin="10,310,10,10" FontSize="{StaticResource FontSize}" FontFamily="{StaticResource FontFamily}" Foreground="Red"/>
+
+
     </Grid>
 </Window>

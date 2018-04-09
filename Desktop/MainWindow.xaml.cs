@@ -93,7 +93,15 @@ namespace Desktop
                     FirstParameter.Visibility = Visibility.Hidden;
                     SecondParameter.Visibility = Visibility.Hidden;
                     break;
+                case "Substitution":
+                    LoadSubValues.Visibility = Visibility.Visible;
+                    FirstParamLabel.Visibility = Visibility.Hidden;
+                    SecParamLabel.Visibility = Visibility.Hidden;
+                    FirstParameter.Visibility = Visibility.Hidden;
+                    SecondParameter.Visibility = Visibility.Hidden;
+                    break;
                 default:
+                    LoadSubValues.Visibility = Visibility.Hidden;
                     FirstParamLabel.Visibility = Visibility.Hidden;
                     SecParamLabel.Visibility = Visibility.Hidden;
                     FirstParameter.Visibility = Visibility.Hidden;
@@ -114,6 +122,8 @@ namespace Desktop
             SecParamLabel.Visibility = Visibility.Hidden;
             FirstParameter.Visibility = Visibility.Hidden;
             SecondParameter.Visibility = Visibility.Hidden;
+            LoadSubValues.Visibility = Visibility.Hidden;
+            MaskedTableViewsTabControl.Visibility = Visibility.Hidden;
         }
         private void ShowElements()
         {
@@ -123,9 +133,9 @@ namespace Desktop
             MaskButton.Visibility = Visibility.Visible;
             LoadWorkload.Visibility = Visibility.Visible;
             //FirstParameter.Visibility = Visibility.Visible;
-            SecondParameter.Visibility = Visibility.Visible;
-            FirstParamLabel.Visibility = Visibility.Visible;
-            SecParamLabel.Visibility = Visibility.Visible;
+            //SecondParameter.Visibility = Visibility.Visible;
+            //FirstParamLabel.Visibility = Visibility.Visible;
+            //SecParamLabel.Visibility = Visibility.Visible;
         }
         private void Connect(object sender, RoutedEventArgs e)
         {
@@ -143,7 +153,11 @@ namespace Desktop
         private void LoadDbSchema(object sender, RoutedEventArgs e)
         {
             ShowElements();
-            mController.LoadDatabase();
+            string lResult = mController.LoadDatabase();
+            if(lResult != "")
+            {
+                MessageBox.Show(lResult);
+            }
         }
 
         private void TablesGrid_SelectionChanged(object sender, SelectionChangedEventArgs e)
@@ -175,6 +189,16 @@ namespace Desktop
 
             ParamsControl(lFunctionName);
         }
+        private void InitControls()
+        {
+            string lFunctionName = mController.FunctionName;
+            if (MasksComboBox.SelectedItem == null)
+            {
+                lFunctionName = "";
+            }
+
+            ParamsControl(lFunctionName);
+        }
         private void ColumnsGrid_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             if (ColumnsGrid.SelectedIndex == -1)
@@ -193,8 +217,12 @@ namespace Desktop
 
         private void MaskButton_OnClick(object sender, RoutedEventArgs e)
         {
+            Mask.String.NewOriginal_MaskedPairs();
             InfoLabel.Content = mController.ApplyMasking(FirstParameter.Text, SecondParameter.Text);
             MasksComboBox.SelectedItem = null;
+
+            
+
         }
         private void LoadWorkload_OnClick(object sender, RoutedEventArgs e)
         {
@@ -204,9 +232,9 @@ namespace Desktop
             lOpenFileDialog.DefaultExt = ".txt";
             lOpenFileDialog.Filter = "TXT Files (*.txt)|*.txt|SQL Files (*.sql)|*.sql";
 
-            Nullable<bool> result = lOpenFileDialog.ShowDialog();
+            Nullable<bool> lResult = lOpenFileDialog.ShowDialog();
 
-            if (result == true)
+            if (lResult.HasValue && lResult == true)
             {
                 mWorkloadFile = lOpenFileDialog.FileName;
                 mController.WorkloadProcessing.LoadWorkload(mWorkloadFile, OnAnalyzingWorkload);
@@ -217,6 +245,19 @@ namespace Desktop
             else
             {
                 InfoLabel.Content = "Workload was not loaded";
+            }
+        }
+        private void LoadSubValues_OnClick(object sender, RoutedEventArgs e)
+        {
+            Microsoft.Win32.OpenFileDialog lOpenFileDialog = new Microsoft.Win32.OpenFileDialog();
+
+            lOpenFileDialog.DefaultExt = ".txt";
+            lOpenFileDialog.Filter = "TXT Files (*.txt)|*.txt";
+
+            Nullable<bool> lResult = lOpenFileDialog.ShowDialog();
+            if(lResult.HasValue && lResult == true)
+            {
+                mController.LoadSubstitutionValues(lOpenFileDialog.FileName);
             }
         }
         private void EditWorkload_Click(object sender, RoutedEventArgs e)
@@ -236,6 +277,7 @@ namespace Desktop
         private void OnMaskedTable(object sender, TableMaskedEventArgs e)
         {
             AddMaskedTableView($"{e.TableName}: { e.ColumnName}", e.MaskedTableItems);
+            MaskedTableViewsTabControl.Visibility = Visibility.Visible;
         }
         private void OnAnalyzingWorkload (object sender, string e)
         {

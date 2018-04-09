@@ -9,11 +9,11 @@ namespace Mask
 {
     public class String
     {
-        private static readonly Random Rnd;
-
+        private static readonly Random mRandom;
+        public static Dictionary<string, string> Original_MaskedPairs;
         static String()
         {
-            Rnd = new Random();
+            mRandom = new Random();
         }
         public static string ConcatenateEmail(string a, string b, string domain="@example.cz")
         {
@@ -24,7 +24,7 @@ namespace Mask
         {
             const string chars = "abcdefghijklmnopqrstuvwxyz";
             int length = to - from;
-            var rep = new string(Enumerable.Repeat(chars, length).Select(s => s[Rnd.Next(s.Length)]).ToArray());
+            var rep = new string(Enumerable.Repeat(chars, length).Select(s => s[mRandom.Next(s.Length)]).ToArray());
             if (str.Length < from || str.Length-from<length)
             {
                 return str;
@@ -57,6 +57,31 @@ namespace Mask
                 return res;
             }
             
+        }
+
+        public static string Substitution(string aValue)
+        {
+            if(Original_MaskedPairs != null)
+            {
+
+            }
+            var lValue = Original_MaskedPairs.Where(aR => aR.Key == aValue).Select(aR => aR.Value).FirstOrDefault();
+            if(lValue != null)
+            {
+                return lValue;
+            }
+            else
+            {
+                int lIndex = mRandom.Next(Mask.SubstitutionValues.Count);
+                string lMaskedValue = Mask.SubstitutionValues[lIndex];
+                Original_MaskedPairs.Add(aValue, lMaskedValue);
+                Mask.SubstitutionValues.RemoveAt(lIndex);
+                return lMaskedValue;
+            }      
+        }
+        public static void NewOriginal_MaskedPairs()
+        {
+            Original_MaskedPairs = new Dictionary<string, string>();
         }
     }
 }

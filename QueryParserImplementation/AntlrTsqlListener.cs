@@ -149,7 +149,7 @@ namespace QueryParserImplementation
                 foreach (var nChild in context.children)
                 {
                     Condition lCondition = ParseCondition.Parse(nChild.GetText().ToLower());
-                    if (lCondition.ColumnName == null || lCondition.Value == null || lCondition.Operator == null)
+                    if (lCondition.ColumnName == null || lCondition.Value == null || lCondition.Operator == null)   
                         continue;                  
                     int lColumnCount = 0;
                     string lTableName = "";
@@ -298,6 +298,16 @@ namespace QueryParserImplementation
                     {
                         DateTime lIntValue = new DateTime();
                         return DateTime.TryParse(aValue, out lIntValue);
+                    }
+                case "float":
+                    {
+                        float lValue = 0;
+                        return float.TryParse(aValue, out lValue);
+                    }
+                case "real":
+                    {
+                        double lValue = 0;
+                        return Double.TryParse(aValue, out lValue);
                     }
                 default:
                     return false;
